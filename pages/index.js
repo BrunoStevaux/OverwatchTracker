@@ -6,6 +6,10 @@ import { useState } from 'react'
 import { getPlayer } from '../Utilities/fetchPlayer'
 
 const accounts = [...Array(5)]
+
+accounts.forEach((account) => {
+  account = getPlayer()
+})
 export default function Home() {
 
   const [playerSearch, setPlayerSearch] = useState('');
