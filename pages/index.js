@@ -5,22 +5,23 @@ import { useState } from 'react'
 
 import { getPlayer } from '../Utilities/fetchPlayer'
 
-const accounts = [...Array(5)]
-
-accounts.forEach((account) => {
-  account = getPlayer()
-})
 export default function Home() {
+  const [showAccounts, setShowAccounts] = useState([])
 
   const [playerSearch, setPlayerSearch] = useState('');
-  let test = "Hello"
 
   const handlePlayerSearch = async (e) => {
-    test = await getPlayer(playerSearch)
-    console.log(test)
+    if(playerSearch.length < 1) return
+    setPlayerSearch("")
+    const test = await getPlayer(playerSearch)
+    setShowAccounts(currentAccounts => [... currentAccounts, test])
   }
 
-  // const getAccounts
+  const handleEnterKey = (e) => {
+    if (e.keyCode !== 13) return
+
+    handlePlayerSearch(e)
+  }
 
   return (
     <div className={styles.container}>
@@ -35,30 +36,35 @@ export default function Home() {
         </div>
       </div>
 
-
       <input
         type="search"
+        id="player-search-field"
         value={playerSearch}
         placeholder="PizzaLawyer#11545"
         onChange={(e) => { setPlayerSearch(e.currentTarget.value) }}
+        onKeyUp={(e) => { handleEnterKey(e) }}
       ></input>
       <button
         type="button"
+        // value={submit}
         className="btn btn-primary"
-        id="pleayer-search-button"
+        id="player-search-button"
         onClick={(e) => handlePlayerSearch(e)}
       >
         Search
       </button>
 
       <div className="row gap-3">
-        {accounts.map((account, id) => 
-          <div className="col-sm border border-dark rounded" key={id} style={{width: "200px"}}>
-            PizzaLawyer#11545
-            Tank: Master 2
-            Damage: Grandmaster 3
-            Support: Unplaced
-          </div>
+        {showAccounts.map((account, id) => 
+          <div
+            className="col-2 border border-dark rounded"
+            key={id}>
+              {account.name} <br/>
+              Tank: {account.tankSR} <br/>
+              Damage: {account.damageSR} <br/>
+              Support: {account.supportSR} <br />
+            {/* Last Updated: {account.lastUpdated} <br /> */}
+            </div>
         )}
       </div>
     </div>
