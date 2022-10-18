@@ -11,6 +11,7 @@ export default function Home() {
   const [playerSearch, setPlayerSearch] = useState('');
 
   const handlePlayerSearch = async (e) => {
+    if(playerSearch.length < 1) return
     setPlayerSearch("")
     const test = await getPlayer(playerSearch)
     setShowAccounts(currentAccounts => [... currentAccounts, test])
@@ -18,6 +19,7 @@ export default function Home() {
 
   const handleEnterKey = (e) => {
     if (e.keyCode !== 13) return
+
     handlePlayerSearch(e)
   }
 
