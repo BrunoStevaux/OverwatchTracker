@@ -29,7 +29,7 @@ function randomizeRank() {
 
 async function getPlayer(playerName) {
     let player = {}
-    // player.lastUpdated = time.now()
+    player.lastUpdated = Date.now()
     player.name = playerName
     player.tankSR = randomizeRank() || "Not Available"
     player.damageSR = randomizeRank() || "Not Available"
@@ -37,6 +37,7 @@ async function getPlayer(playerName) {
     player.profileIcon = "https://i.pinimg.com/originals/89/78/c2/8978c239d819de41f0d73bbcbafb9a6f.png"
     return player
 }
+
 module.exports = {
     getPlayer   
 }
