@@ -11,19 +11,33 @@ import moment from "moment"
 
 export default function Home() {
   const [showAccounts, setShowAccounts] = useState([])
+  const [playerSearch, setPlayerSearch] = useState('')
 
-  const [playerSearch, setPlayerSearch] = useState('');
-
-  const handlePlayerSearch = async (e) => {
+  const handlePlayerSearchInput = async (e) => {
     if(playerSearch.length < 1) return
     setPlayerSearch("")
-    const test = await getPlayer(playerSearch)
-    setShowAccounts(currentAccounts => [... currentAccounts, test])
+    const newAccount = await getPlayer(playerSearch)
+    setShowAccounts(currentAccounts => [... currentAccounts, newAccount])
+  }
+
+  const search = async (name) => {
+    const newAccount = await getPlayer(name)
   }
 
   const handleEnterKey = (e) => {
     if (e.keyCode !== 13) return
-    handlePlayerSearch(e)
+    handlePlayerSearchInput(e)
+  }
+
+  const updateAccount = (account, id) => {
+    console.log(account.name)
+    console.log(showAccounts[id])
+  }
+
+  const removeAccount = (id) => {
+    let test = showAccounts
+    test.splice(id, 1)
+    setShowAccounts(test)
   }
 
   return (
@@ -53,42 +67,45 @@ export default function Home() {
           // value={submit}
           className="btn btn-primary"
           id="player-search-button"
-          onClick={(e) => handlePlayerSearch(e)}
+          onClick={(e) => handlePlayerSearchInput(e)}
         >
           Search
         </button>
 
         <div
-          className={styles.containerFluid}
           style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
         >
           
           {showAccounts.map((account, id) => 
-            <div class="card" style={{ width: "320px", margin: "3px" }}>
+            <div class="card" style={{ width: "320px", margin: "3px" }} id={id} key={id}>
               {/* <img class="card-img-top" src={account.profileIcon}></img> */}
-              <div class="card-body" key={id}>
+              <div class="card-body">
                 <div style={{display: "flex"}}>
                   <img src={account.profileIcon} width="40"></img>
                   <h5 class="card-header">{account.name}</h5>
-                  <FontAwesomeIcon icon={faRefresh}/>
-                  <FontAwesomeIcon icon={faClose}/>
+                  <button className="btn btn-success" onClick={(e) => updateAccount(account, id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
+                  <button className="btn btn-danger" onClick={(e) => removeAccount(id)}> <FontAwesomeIcon icon={faClose}/> </button>
                 </div>
+
                 <p class="card-text" style = {{color: "darkgrey"}}>Last Updated: {moment(account.lastUpdated).fromNow()}</p>
                 <div style= {{display: "flex"}}>
-                  <FontAwesomeIcon icon={faChevronDown}/>
-                  <FontAwesomeIcon icon={faChevronUp} />
+                  <button><FontAwesomeIcon icon={faChevronDown}/></button>
+                  <button><FontAwesomeIcon icon={faChevronUp}/></button>
                   <p class="card-text">Tank: {account.tankSR}</p>
                 </div>
+
                 <div style= {{display: "flex"}}>
-                  <FontAwesomeIcon icon={faChevronDown}/>
-                  <FontAwesomeIcon icon={faChevronUp}/>
+                  <button><FontAwesomeIcon icon={faChevronDown}/></button>
+                  <button><FontAwesomeIcon icon={faChevronUp}/></button>
                   <p class="card-text">Damage: {account.damageSR}</p>
                 </div>
+
                 <div style= {{display: "flex"}}>
-                  <FontAwesomeIcon icon={faChevronDown}/>
-                  <FontAwesomeIcon icon={faChevronUp}/>
+                  <button><FontAwesomeIcon icon={faChevronDown}/></button>
+                  <button><FontAwesomeIcon icon={faChevronUp}/></button>
                   <p class="card-text">Support: {account.supportSR}</p>
                 </div>
+
                 <a href="#" class="card-link">View online</a>
               </div>
             </div>
