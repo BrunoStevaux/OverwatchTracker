@@ -60,6 +60,7 @@ async function getPlayer(playerName) {
         player.damageSR = randomizeRank() || "Not Available"
         player.supportSR = randomizeRank() || "Not Available"
         player.profileIcon = "https://i.pinimg.com/originals/89/78/c2/8978c239d819de41f0d73bbcbafb9a6f.png"
+        player.url = `https://overwatch.blizzard.com/en-gb/search/${playerName}/`
         return player
     }
 }
