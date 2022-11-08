@@ -19,7 +19,11 @@ export default function Home() {
       let localAccounts = localStorage.getItem('savedAccounts')
       localAccounts = JSON.parse(localAccounts)
 
+      if(localAccounts.length < 1) return
+
       setShowAccounts(localAccounts)
+
+      console.log(`Loaded ${localAccounts.length} account(s)`)
     } catch (e) { console.log(e) }
   }
 
@@ -54,6 +58,14 @@ export default function Home() {
     localStorage.setItem('savedAccounts', JSON.stringify(showAccounts));
   }
 
+  // const updateAllAccounts = () => {
+
+  //   setShowAccounts()
+  //   showAccounts.forEach(account => {
+  //     account.lastUpdated = updateTime()
+  //   })
+  // }
+
   const updateAccount = (id) => {
     console.log(`Updating account [${showAccounts[id].name}]`)
 
@@ -70,7 +82,7 @@ export default function Home() {
     console.log(`Removing account [${showAccounts[id].name}] - id ${id}`)    
     setShowAccounts(showAccounts.filter(account => 
       account.name !== showAccounts[id].name
-      ))
+    ))
     console.log(`Success`)
     saveToLocal()
   }
@@ -111,7 +123,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+        <div class="search-bar">
           <input
             type="search"
             id="player-search-field"
@@ -130,18 +142,18 @@ export default function Home() {
           </button>
         </div>
         <div
-          style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+          style={{ display: "flex", flexWrap: "wrap", justifyContent: "left" }}
         >
           
           {showAccounts.map((account, id) => 
-          <div className="card" style={{ width: "320px", margin: "3px" }} id={id} key={id}>
+          <div className="card" style={{ width: "320px", margin: "3px", borderRadius: "10px" }} id={id} key={id}>
             {/* <img class="card-img-top" src={account.profileIcon}></img> */}
             <div className="card-body">
               <div style={{display: "flex"}}>
                 <img src={account.profileIcon} width="40"></img>
                 <h5 className="card-header">{account.name}</h5>
-                <button className="btn btn-success" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
-                <button className="btn btn-danger" onClick={() => removeAccount(id)}> <FontAwesomeIcon icon={faClose}/> </button>
+                <button className="refresh-button" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
+                <button className="delete-button" onClick={() => removeAccount(id)}> <FontAwesomeIcon icon={faClose}/> </button>
               </div>
 
               <p className="card-text" style={{ color: "darkgrey" }}>Last Updated: {moment(account.lastUpdated).fromNow()}, {account.lastUpdated}</p>
