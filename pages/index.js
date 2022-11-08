@@ -1,22 +1,39 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useState } from 'react'
-import { getPlayer } from '../Utilities/fetchPlayer'
+import { Component, useState } from 'react'
+import { getPlayer, increaseRank, decreaseRank, updateTime} from '../Utilities/fetchPlayer'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faRefresh, faClose, faChevronUp, faChevronDown, fa } from '@fortawesome/free-solid-svg-icons'
+import { faRefresh, faClose, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import moment from "moment"
 
 
 export default function Home() {
+
   const [showAccounts, setShowAccounts] = useState([])
   const [playerSearch, setPlayerSearch] = useState('')
 
+  // ON LOAD
+  const loadAccounts = () => {
+    // On load
+    try {
+      console.log("Attempting to load from localstorage")
+      let localAccounts = localStorage.getItem('savedAccounts')
+      localAccounts = JSON.parse(localAccounts)
+
+      setShowAccounts(localAccounts)
+    } catch (e) { console.log(e) }
+  }
+
+
   const handlePlayerSearchInput = async (e) => {
-    if (playerSearch.length < 1) return // Check if there is any input
-
-
+    if (playerSearch.length < 1) {
+      loadAccounts()
+      return // Check if there is any input
+    }
+    // https://eu.forums.blizzard.com/en/blizzard/t/battle-tag-regex-expression/444
+    // (^([A-zÀ-ú][A-zÀ-ú0-9]{2,11})|(^([а-яёА-ЯЁÀ-ú][а-яёА-ЯЁ0-9À-ú]{2,11})))(#[0-9]{4,})$
 
     if (showAccounts.filter(account => account.name == playerSearch).length > 0) { // Check that account is not duplicate
       alert(`Account "${playerSearch}" already added`)
@@ -36,17 +53,47 @@ export default function Home() {
     handlePlayerSearchInput(e)
   }
 
-  const updateAccount = (account, id) => {
-    console.log(account.name)
-    console.log(showAccounts[id])
+  const updateAccount = (id) => {
+    console.log(`Updating account [${showAccounts[id].name}]`)
+
+    let buffer = showAccounts.filter(account => account.name == showAccounts[id].name)[0]
+    buffer.lastUpdated = updateTime()
+
+    setShowAccounts[id] = buffer
+    setShowAccounts(currentAccounts => [...currentAccounts])
+
+    console.log(showAccounts)
+
+    // EXAMPLES
+
+    localStorage.setItem('savedAccounts', JSON.stringify(showAccounts));
+    // let accounts = localStorage.getItem('savedAccounts', JSON.parse(showAccounts));
   }
 
-  const removeAccount = (account, id) => {
+  const removeAccount = (id) => {
     console.log(`Removing account [${showAccounts[id].name}] - id ${id}`)    
     setShowAccounts(showAccounts.filter(account => 
       account.name !== showAccounts[id].name
       ))
     console.log(`Success`)
+  }
+
+  const rankUp = (id, role) => {
+    let buffer = showAccounts.filter(account => account.name == showAccounts[id].name)[0]
+    if(role == "tank") buffer.tankSR = increaseRank(buffer.tankSR)
+    if(role == "damage") buffer.damageSR = increaseRank(buffer.damageSR)
+    if(role == "support") buffer.supportSR = increaseRank(buffer.supportSR)
+
+    updateAccount(id)
+  }
+
+  const rankDown = (id, role) => {
+    let buffer = showAccounts.filter(account => account.name == showAccounts[id].name)[0]
+    if(role == "tank") buffer.tankSR = decreaseRank(buffer.tankSR)
+    if(role == "damage") buffer.damageSR = decreaseRank(buffer.damageSR)
+    if(role == "support") buffer.supportSR = decreaseRank(buffer.supportSR)
+
+    updateAccount(id)
   }
 
   return (
@@ -91,26 +138,27 @@ export default function Home() {
                 <div style={{display: "flex"}}>
                   <img src={account.profileIcon} width="40"></img>
                   <h5 className="card-header">{account.name}</h5>
-                  <button className="btn btn-success" onClick={(e) => updateAccount(account, id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
-                  <button className="btn btn-danger" onClick={(e) => removeAccount(account, id)}> <FontAwesomeIcon icon={faClose}/> </button>
+                  <button className="btn btn-success" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
+                  <button className="btn btn-danger" onClick={() => removeAccount(id)}> <FontAwesomeIcon icon={faClose}/> </button>
                 </div>
 
-                <p className="card-text" style = {{color: "darkgrey"}}>Last Updated: {moment(account.lastUpdated).fromNow()}</p>
-                <div style= {{display: "flex"}}>
-                  <button><FontAwesomeIcon icon={faChevronDown}/></button>
-                  <button><FontAwesomeIcon icon={faChevronUp}/></button>
+                <p className="card-text" style={{ color: "darkgrey" }}>Last Updated: {moment(account.lastUpdated).fromNow()}, {account.lastUpdated}</p>
+                <div style={{ display: "flex" }}>
+                  <button onClick={() => rankDown(id, "tank")}><FontAwesomeIcon icon={faChevronDown}/></button>
+                  <button onClick={() => rankUp(id, "tank")}><FontAwesomeIcon icon={faChevronUp} /></button>
+                
                   <p className="card-text">Tank: {account.tankSR}</p>
                 </div>
 
                 <div style= {{display: "flex"}}>
-                  <button><FontAwesomeIcon icon={faChevronDown}/></button>
-                  <button><FontAwesomeIcon icon={faChevronUp}/></button>
+                  <button onClick={() => rankDown(id, "damage")}><FontAwesomeIcon icon={faChevronDown}/></button>
+                  <button onClick={() => rankUp(id, "damage")}><FontAwesomeIcon icon={faChevronUp}/></button>
                   <p className="card-text">Damage: {account.damageSR}</p>
                 </div>
 
                 <div style= {{display: "flex"}}>
-                  <button><FontAwesomeIcon icon={faChevronDown}/></button>
-                  <button><FontAwesomeIcon icon={faChevronUp}/></button>
+                  <button onClick={() => rankDown(id, "support")}><FontAwesomeIcon icon={faChevronDown}/></button>
+                  <button onClick={() => rankUp(id, "support")}><FontAwesomeIcon icon={faChevronUp}/></button>
                   <p className="card-text">Support: {account.supportSR}</p>
                 </div>
 
