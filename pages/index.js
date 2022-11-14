@@ -19,6 +19,7 @@ export default function Home() {
       let localAccounts = localStorage.getItem('savedAccounts')
       localAccounts = JSON.parse(localAccounts)
 
+      console.log(localAccounts.length)
       if(localAccounts.length < 1) return
 
       setShowAccounts(localAccounts)
@@ -54,36 +55,32 @@ export default function Home() {
   }
 
   const saveToLocal = () => {
-    console.log("Saved to localstorage")
     localStorage.setItem('savedAccounts', JSON.stringify(showAccounts));
+    console.log("Saved to localstorage")
   }
 
-  // const updateAllAccounts = () => {
-
-  //   setShowAccounts()
-  //   showAccounts.forEach(account => {
-  //     account.lastUpdated = updateTime()
-  //   })
-  // }
-
-  const updateAccount = (id) => {
+  function updateAccount(id) {
     console.log(`Updating account [${showAccounts[id].name}]`)
 
+    // Fetch the account from our list
     let buffer = showAccounts.filter(account => account.name == showAccounts[id].name)[0]
-    buffer.lastUpdated = updateTime()
+    buffer.lastUpdated = updateTime() // Update the info
 
-    setShowAccounts[id] = buffer
-    setShowAccounts(currentAccounts => [...currentAccounts])
+    setShowAccounts[id] = buffer // Put updated account back in list
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
 
     saveToLocal()
   }
 
   const removeAccount = (id) => {
-    console.log(`Removing account [${showAccounts[id].name}] - id ${id}`)    
-    setShowAccounts(showAccounts.filter(account => 
+
+    let newAccountList = showAccounts.filter(account => 
       account.name !== showAccounts[id].name
-    ))
-    console.log(`Success`)
+      )
+    
+    newAccountList.forEach(account => console.log(account.name))
+    setShowAccounts(newAccountList) // Refresh the account list
+
     saveToLocal()
   }
 
@@ -113,20 +110,14 @@ export default function Home() {
   return (
     <div>
       <div className={styles.container}>
-        <div className="container bg-secondary">
-          <div className="d-flex flex-row">
-            <div className="p-2">
-              <img src="https://blz-contentstack-images.akamaized.net/v3/assets/blt9c12f249ac15c7ec/bltbcf2689c29fa39eb/622906a991f4232f0085d3cc/Masthead_Overwatch2_Logo.png?auto=webp" height="20"/>
-            </div>
-            <div className="p-2">
-              <h1> Account Tracker </h1>
-            </div>
-          </div>
+        <div className="ow-header">
+          <img src="https://blz-contentstack-images.akamaized.net/v3/assets/blt9c12f249ac15c7ec/bltbcf2689c29fa39eb/622906a991f4232f0085d3cc/Masthead_Overwatch2_Logo.png?auto=webp" height="30"/>
+          <h1> Account Tracker </h1>
         </div>
-        <div class="search-bar">
+        <div className="search-bar">
           <input
             type="search"
-            id="player-search-field"
+            className="player-search-field"
             value={playerSearch}
             placeholder="PizzaLawyer#11545"
             onChange={(e) => { setPlayerSearch(e.currentTarget.value) }}
@@ -134,8 +125,7 @@ export default function Home() {
           ></input>
           <button
             type="button"
-            className="btn btn-primary"
-            id="player-search-button"
+            className="player-search-button"
             onClick={(e) => handlePlayerSearchInput(e)}
           >
             <FontAwesomeIcon icon={faMagnifyingGlass}/>
@@ -146,14 +136,18 @@ export default function Home() {
         >
           
           {showAccounts.map((account, id) => 
-          <div className="card" style={{ width: "320px", margin: "3px", borderRadius: "10px" }} id={id} key={id}>
+          <div className="card" style={{ width: "310px", margin: "3px", borderRadius: "10px" }} id={id} key={id}>
             {/* <img class="card-img-top" src={account.profileIcon}></img> */}
             <div className="card-body">
               <div style={{display: "flex"}}>
+                <div>  
                 <img src={account.profileIcon} width="40"></img>
                 <h5 className="card-header">{account.name}</h5>
-                <button className="refresh-button" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
-                <button className="delete-button" onClick={() => removeAccount(id)}> <FontAwesomeIcon icon={faClose}/> </button>
+                </div>
+                <div>  
+                  <button className="refresh-button" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
+                  <button className="delete-button" onClick={() => removeAccount(id)}> <FontAwesomeIcon icon={faClose}/> </button>
+                </div>
               </div>
 
               <p className="card-text" style={{ color: "darkgrey" }}>Last Updated: {moment(account.lastUpdated).fromNow()}, {account.lastUpdated}</p>

@@ -1,8 +1,39 @@
-.search-bar {
-    width: 100%;
-    padding: 20px;
+.ow-header {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: white
+}
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    backdrop-filter: blur(4px) ;
+}
+
+.player-search-field {
+    width: 90%;
+    background: transparent;
+    border: 0;
+    outline: none;
+    font-size: 30px;
+    color: black;
+}
+
+.player-search-button {
+    background: transparent;
+    border-radius: 50%;
+    border: 0;
+    color: black;
+    font-size: 30px;
 }
 
 .card {
