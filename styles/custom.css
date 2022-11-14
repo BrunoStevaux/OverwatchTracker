@@ -39,3 +39,23 @@
 .card {
     border-radius: 10px;
 }
+
+.refresh-button {
+    background: transparent;
+    color: black;
+    border: 0;
+    border-radius: 50%;
+}
+
+.delete-button {
+    background: transparent;
+    color: black;
+    border: 0;
+    border-radius: 50%;
+}
+
+.rank {
+    background: transparent;
+    color: black;
+    border-radius: 50%;
+}

@@ -139,10 +139,10 @@ export default function Home() {
           <div className="card" style={{ width: "310px", margin: "3px", borderRadius: "10px" }} id={id} key={id}>
             {/* <img class="card-img-top" src={account.profileIcon}></img> */}
             <div className="card-body">
-              <div style={{display: "flex"}}>
-                <div>  
-                <img src={account.profileIcon} width="40"></img>
-                <h5 className="card-header">{account.name}</h5>
+              <div style={{display: "flex", justifyContent: "space-between"}}>
+                <div style={{display: "flex"}}>  
+                  <img src={account.profileIcon} width="40"></img>
+                  <h5 className="card-header">{account.name}</h5>
                 </div>
                 <div>  
                   <button className="refresh-button" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
@@ -151,22 +151,22 @@ export default function Home() {
               </div>
 
               <p className="card-text" style={{ color: "darkgrey" }}>Last Updated: {moment(account.lastUpdated).fromNow()}, {account.lastUpdated}</p>
-              <div style={{ display: "flex" }}>
-                <button onClick={() => rankDown(id, "tank")}><FontAwesomeIcon icon={faChevronDown}/></button>
-                <button onClick={() => rankUp(id, "tank")}><FontAwesomeIcon icon={faChevronUp} /></button>
+              <div style={{ display: "flex", alignItems: "center"}}>
+                <button className="rank" onClick={() => rankDown(id, "tank")}><FontAwesomeIcon icon={faChevronDown}/></button>
+                <button className="rank" onClick={() => rankUp(id, "tank")}><FontAwesomeIcon icon={faChevronUp} /></button>
               
                 <p className="card-text">Tank: {account.tankSR}</p>
               </div>
 
-              <div style= {{display: "flex"}}>
-                <button onClick={() => rankDown(id, "damage")}><FontAwesomeIcon icon={faChevronDown}/></button>
-                <button onClick={() => rankUp(id, "damage")}><FontAwesomeIcon icon={faChevronUp}/></button>
+              <div style={{ display: "flex", alignItems: "center"}}>
+                <button className="rank" onClick={() => rankDown(id, "damage")}><FontAwesomeIcon icon={faChevronDown}/></button>
+                <button className="rank" onClick={() => rankUp(id, "damage")}><FontAwesomeIcon icon={faChevronUp}/></button>
                 <p className="card-text">Damage: {account.damageSR}</p>
               </div>
 
-              <div style= {{display: "flex"}}>
-                <button onClick={() => rankDown(id, "support")}><FontAwesomeIcon icon={faChevronDown}/></button>
-                <button onClick={() => rankUp(id, "support")}><FontAwesomeIcon icon={faChevronUp}/></button>
+              <div style={{ display: "flex", alignItems: "center"}}>
+                <button className="rank" onClick={() => rankDown(id, "support")}><FontAwesomeIcon icon={faChevronDown}/></button>
+                <button className="rank" onClick={() => rankUp(id, "support")}><FontAwesomeIcon icon={faChevronUp}/></button>
                 <p className="card-text">Support: {account.supportSR}</p>
               </div>
 
