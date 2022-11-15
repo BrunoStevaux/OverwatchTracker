@@ -6,6 +6,7 @@
     padding: 20px;
     color: white
 }
+
 .search-bar {
     display: flex;
     align-items: center;
@@ -19,6 +20,14 @@
     backdrop-filter: blur(4px) ;
 }
 
+/* For mobile users. Yuck! */
+@media only screen and (max-width: 800px) {
+.search-bar {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
+
 .player-search-field {
     width: 90%;
     background: transparent;
@@ -28,6 +37,9 @@
     color: black;
 }
 
+.player-search-field::placeholder {
+    color:rgba(60, 60, 60, 0.8)
+}
 .player-search-button {
     background: transparent;
     border-radius: 50%;

@@ -29,9 +29,11 @@ export default function Home() {
   }
 
   const handlePlayerSearchInput = async (e) => {
-    if (playerSearch.length < 1) {
+    if (playerSearch.length < 1 || playerSearch.length >= 12) {
       return // Check if there is any input
     }
+
+    
     // https://eu.forums.blizzard.com/en/blizzard/t/battle-tag-regex-expression/444
     // (^([A-zÀ-ú][A-zÀ-ú0-9]{2,11})|(^([а-яёА-ЯЁÀ-ú][а-яёА-ЯЁ0-9À-ú]{2,11})))(#[0-9]{4,})$
 
@@ -46,7 +48,8 @@ export default function Home() {
   const addPlayer = async (account) => {
     const newAccount = await getPlayer(account)
     setShowAccounts(currentAccounts => [...currentAccounts, newAccount])
-    saveToLocal()
+    let newArray = [...showAccounts, newAccount]
+    saveToLocal(newArray)
   }
 
   const handleEnterKey = (e) => {
@@ -54,8 +57,8 @@ export default function Home() {
     handlePlayerSearchInput(e)
   }
 
-  const saveToLocal = () => {
-    localStorage.setItem('savedAccounts', JSON.stringify(showAccounts));
+  const saveToLocal = (accountsToSave) => {
+    localStorage.setItem('savedAccounts', JSON.stringify(accountsToSave))
     console.log("Saved to localstorage")
   }
 
@@ -69,7 +72,7 @@ export default function Home() {
     setShowAccounts[id] = buffer // Put updated account back in list
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
 
-    saveToLocal()
+    saveToLocal(showAccounts)
   }
 
   const removeAccount = (id) => {
@@ -77,11 +80,8 @@ export default function Home() {
     let newAccountList = showAccounts.filter(account => 
       account.name !== showAccounts[id].name
       )
-    
-    newAccountList.forEach(account => console.log(account.name))
     setShowAccounts(newAccountList) // Refresh the account list
-
-    saveToLocal()
+    saveToLocal(newAccountList)
   }
 
   const rankUp = (id, role) => {
