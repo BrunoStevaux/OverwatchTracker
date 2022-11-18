@@ -76,6 +76,10 @@ function increaseRank(rank) {
     return ranks[rankIndex + 1] // Return next rank up
 }
 
+function getRank(rank) { 
+    return ranks.indexOf(rank);
+}
+
 // Decrease the rank
 function decreaseRank(rank) {
     let rankIndex = ranks.indexOf(rank)
@@ -87,5 +91,6 @@ module.exports = {
     getPlayer,
     increaseRank,
     decreaseRank,
+    getRank,
     updateTime
 }
