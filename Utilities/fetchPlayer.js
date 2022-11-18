@@ -52,7 +52,7 @@ async function getPlayer(playerName) {
     /////////////////
     // SEARCH FOR PLAYER HERE
     /////////////////
-
+    
     if (true) { // if cannot find player 
 
         player.custom = true

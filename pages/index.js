@@ -22,7 +22,6 @@ export default function Home() {
       let localAccounts = localStorage.getItem('savedAccounts')
       localAccounts = JSON.parse(localAccounts)
 
-      console.log(localAccounts.length)
       if(localAccounts.length < 1) return
 
       setShowAccounts(localAccounts)
@@ -32,17 +31,29 @@ export default function Home() {
   }
 
   const handlePlayerSearchInput = async (e) => {
-    let { name, tag } = playerSearch.split("#");
-    console.log();
-    console.log(name, tag);
-
     if (playerSearch.length < 1) {
       return // Check if there is any input
     }
 
-    // https://eu.forums.blizzard.com/en/blizzard/t/battle-tag-regex-expression/444
-    // (^([A-zÀ-ú][A-zÀ-ú0-9]{2,11})|(^([а-яёА-ЯЁÀ-ú][а-яёА-ЯЁ0-9À-ú]{2,11})))(#[0-9]{4,})$
+    // Check if discriminator is provided
+    let account = playerSearch.split("#");
+    if (account.length < 2) {
+      alert(`Please provide a discriminator (# symbol followed by 3-6 digits)`)
+      return
+    }
+    
+    // Name check
+    if (account[0].length < 3 || account[0].length > 12) {
+      alert(`Account "${account[0]}" must be between 3 and 12 characters.`)
+      return
+    }
 
+    // Number check
+    if (parseInt(account[1]) < 1000 || parseInt(account[1]) > 999999) {
+      alert(`"${account[1]}" is not a valid discriminator`)
+      return
+    }
+    
     if (showAccounts.filter(account => account.name == playerSearch).length > 0) { // Check that account is not duplicate
       alert(`Account "${playerSearch}" already added`)
       return
@@ -111,7 +122,7 @@ export default function Home() {
 
   const sortTank = () => {
     let sortedAccounts = showAccounts
-    sortedAccounts.sort(function (a, b) { return getRank(a.tankSR) - getRank(b.tankSR) })
+    sortedAccounts.sort(function (a, b) { return getRank(b.tankSR) - getRank(a.tankSR) })
     setShowAccounts(sortedAccounts)
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
 
@@ -119,21 +130,21 @@ export default function Home() {
 
   const sortDamage = () => {
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return getRank(a.damageSR) - getRank(b.damageSR) })
+      sortedAccounts.sort(function (a, b) { return getRank(b.damageSR) - getRank(a.damageSR) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
     }
   
   const sortSupport = () => {
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return getRank(a.supportSR) - getRank(b.supportSR) })
+      sortedAccounts.sort(function (a, b) { return getRank(b.supportSR) - getRank(a.supportSR) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
   }
 
   const sortFlex = () => {
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return (getRank(a.tankSR) + getRank(a.damageSR) + getRank(b.supportSR)) - (getRank(b.tankSR) + getRank(b.damageSR) + getRank(a.supportSR)) })
+      sortedAccounts.sort(function (a, b) { return (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) - (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
   }
@@ -178,7 +189,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div style={{display: "flex", justifyContent: "center", margin: "20px"}}>
+        <div style={{display: "flex", justifyContent: "center", margin: "20px", flexWrap: "wrap"}}>
           <button className="sort-button" onClick={(e) => sortTank()}>
             Tank <FontAwesomeIcon icon={faSort} />
           </button >
@@ -208,12 +219,11 @@ export default function Home() {
             {/* <img class="card-img-top" src={account.profileIcon}></img> */}
             <div className="card-body">
               <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div style={{ display: "flex" }}>  
-                    {/* <FontAwesomeIcon style={{color: "orange"}} icon={faStar}/> */}
-                  <img src={account.profileIcon} width="40"></img>
-                  <h5 className="card-header">{account.name}</h5>
+                <div style={{ display: "flex", alignItems: "flex-start"}}>  
+                  <img className="player-icon" src={account.profileIcon} width="40"></img>
+                  <h5 className="player-name card-header">{account.name}</h5>
                 </div>
-                <div>  
+              <div style={{ display: "flex", alignItems: "flex-start"}}> 
                   <button className="refresh-button" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
                   <button className="delete-button" onClick={() => removeAccount(id)}> <FontAwesomeIcon icon={faClose}/> </button>
                 </div>
