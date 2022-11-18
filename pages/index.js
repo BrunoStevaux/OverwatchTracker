@@ -111,7 +111,7 @@ export default function Home() {
 
   const sortTank = () => {
     let sortedAccounts = showAccounts
-    sortedAccounts.sort(function (a, b) { return getRank(a.tankSR) - getRank(b.tankSR) })
+    sortedAccounts.sort(function (a, b) { return getRank(b.tankSR) - getRank(a.tankSR) })
     setShowAccounts(sortedAccounts)
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
 
@@ -119,21 +119,21 @@ export default function Home() {
 
   const sortDamage = () => {
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return getRank(a.damageSR) - getRank(b.damageSR) })
+      sortedAccounts.sort(function (a, b) { return getRank(b.damageSR) - getRank(a.damageSR) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
     }
   
   const sortSupport = () => {
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return getRank(a.supportSR) - getRank(b.supportSR) })
+      sortedAccounts.sort(function (a, b) { return getRank(b.supportSR) - getRank(a.supportSR) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
   }
 
   const sortFlex = () => {
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return (getRank(a.tankSR) + getRank(a.damageSR) + getRank(b.supportSR)) - (getRank(b.tankSR) + getRank(b.damageSR) + getRank(a.supportSR)) })
+      sortedAccounts.sort(function (a, b) { return (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) - (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
   }
@@ -178,7 +178,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div style={{display: "flex", justifyContent: "center", margin: "20px"}}>
+        <div style={{display: "flex", justifyContent: "center", margin: "20px", flexWrap: "wrap"}}>
           <button className="sort-button" onClick={(e) => sortTank()}>
             Tank <FontAwesomeIcon icon={faSort} />
           </button >
