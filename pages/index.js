@@ -2,10 +2,10 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { Component, useState, useEffect } from 'react'
-import { getPlayer, increaseRank, decreaseRank, updateTime} from '../Utilities/fetchPlayer'
+import { getPlayer, increaseRank, decreaseRank, updateTime, getRank} from '../Utilities/fetchPlayer'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faRefresh, faClose, faChevronUp, faChevronDown, faMagnifyingGlass, faStar} from '@fortawesome/free-solid-svg-icons'
+import { faRefresh, faClose, faChevronUp, faChevronDown, faMagnifyingGlass, faSort} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment"
 
 export default function Home() {
@@ -26,17 +26,20 @@ export default function Home() {
       if(localAccounts.length < 1) return
 
       setShowAccounts(localAccounts)
-
+      
       console.log(`Loaded ${localAccounts.length} account(s)`)
     } catch (e) { console.log(e) }
   }
 
   const handlePlayerSearchInput = async (e) => {
+    let { name, tag } = playerSearch.split("#");
+    console.log();
+    console.log(name, tag);
+
     if (playerSearch.length < 1) {
       return // Check if there is any input
     }
 
-    
     // https://eu.forums.blizzard.com/en/blizzard/t/battle-tag-regex-expression/444
     // (^([A-zÀ-ú][A-zÀ-ú0-9]{2,11})|(^([а-яёА-ЯЁÀ-ú][а-яёА-ЯЁ0-9À-ú]{2,11})))(#[0-9]{4,})$
 
@@ -106,6 +109,45 @@ export default function Home() {
     updateAccount(id)
   }
 
+  const sortTank = () => {
+    let sortedAccounts = showAccounts
+    sortedAccounts.sort(function (a, b) { return getRank(a.tankSR) - getRank(b.tankSR) })
+    setShowAccounts(sortedAccounts)
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+
+  }
+
+  const sortDamage = () => {
+      let sortedAccounts = showAccounts
+      sortedAccounts.sort(function (a, b) { return getRank(a.damageSR) - getRank(b.damageSR) })
+      setShowAccounts(sortedAccounts)
+      setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    }
+  
+  const sortSupport = () => {
+      let sortedAccounts = showAccounts
+      sortedAccounts.sort(function (a, b) { return getRank(a.supportSR) - getRank(b.supportSR) })
+      setShowAccounts(sortedAccounts)
+      setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+  }
+
+  const sortFlex = () => {
+      let sortedAccounts = showAccounts
+      sortedAccounts.sort(function (a, b) { return (getRank(a.tankSR) + getRank(a.damageSR) + getRank(b.supportSR)) - (getRank(b.tankSR) + getRank(b.damageSR) + getRank(a.supportSR)) })
+      setShowAccounts(sortedAccounts)
+      setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+  }
+
+  const refreshAll = () => {
+    for (let i = 0; i < showAccounts.length; i++) { updateAccount(i); console.log(`updating ${showAccounts[i].name}`);}
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+  }
+
+  const deleteAll = () => {
+    setShowAccounts([])
+    saveToLocal([])
+  }
+
   useEffect(() => {
     console.log("Page loaded.");
     loadAccounts()
@@ -135,6 +177,28 @@ export default function Home() {
             <FontAwesomeIcon icon={faMagnifyingGlass}/>
           </button>
         </div>
+
+        <div style={{display: "flex", justifyContent: "center", margin: "20px"}}>
+          <button className="sort-button" onClick={(e) => sortTank()}>
+            Tank <FontAwesomeIcon icon={faSort} />
+          </button >
+          <button className="sort-button" onClick={(e) => sortDamage()}>
+            Damage <FontAwesomeIcon icon={faSort} />
+          </button >
+          <button className="sort-button" onClick={(e) => sortSupport()}>
+            Support <FontAwesomeIcon icon={faSort} />
+          </button >
+          <button className="sort-button" onClick={(e) => sortFlex()}>
+            Flex <FontAwesomeIcon icon={faSort} />
+          </button >
+          <button className="sort-button" onClick={(e) => refreshAll()}>
+            Refresh All <FontAwesomeIcon icon={faRefresh}/>
+          </button >
+          <button className="sort-button deleteAll-button" onClick={(e) => deleteAll()}>
+            Delete All <FontAwesomeIcon icon={faClose} />
+          </button >
+        </div>
+        
         <div
           style={{ display: "flex", flexWrap: "wrap", justifyContent: "left" }}
         >
