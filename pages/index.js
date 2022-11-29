@@ -8,6 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faRefresh, faClose, faChevronUp, faChevronDown, faMagnifyingGlass, faSort} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment"
 
+let tankSortAsc = true
+let damageSortAsc = true
+let supportSortAsc = true
+let flexSortAsc = true
+
 export default function Home() {
 
   const [showAccounts, setShowAccounts] = useState([])
@@ -16,6 +21,10 @@ export default function Home() {
   const DAMAGE = "damage"
   const SUPPORT = "support"
 
+  // let tankSortAsc = true
+  // let damageSortAsc = true
+  // let supportSortAsc = true
+  
   const loadAccounts = () => {
     try {
       console.log("Attempting to load from localstorage")
@@ -121,30 +130,38 @@ export default function Home() {
   }
 
   const sortTank = () => {
+    tankSortAsc = !tankSortAsc
     let sortedAccounts = showAccounts
-    sortedAccounts.sort(function (a, b) { return getRank(b.tankSR) - getRank(a.tankSR) })
+    if (tankSortAsc) sortedAccounts.sort(function (a, b) { return getRank(b.tankSR) - getRank(a.tankSR) })
+    else sortedAccounts.sort(function (a, b) { return getRank(a.tankSR) - getRank(b.tankSR) })
     setShowAccounts(sortedAccounts)
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
 
   }
 
   const sortDamage = () => {
+      damageSortAsc = !damageSortAsc
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return getRank(b.damageSR) - getRank(a.damageSR) })
+      if (damageSortAsc) sortedAccounts.sort(function (a, b) { return getRank(b.damageSR) - getRank(a.damageSR) })
+      else sortedAccounts.sort(function (a, b) { return getRank(a.damageSR) - getRank(b.damageSR) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
     }
   
   const sortSupport = () => {
+      supportSortAsc = !supportSortAsc
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return getRank(b.supportSR) - getRank(a.supportSR) })
+      if (supportSortAsc) sortedAccounts.sort(function (a, b) { return getRank(b.supportSR) - getRank(a.supportSR) })
+      else sortedAccounts.sort(function (a, b) { return getRank(a.supportSR) - getRank(b.supportSR) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
-  }
+    }
 
   const sortFlex = () => {
+      flexSortAsc = !flexSortAsc
       let sortedAccounts = showAccounts
-      sortedAccounts.sort(function (a, b) { return (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) - (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) })
+      if (flexSortAsc) sortedAccounts.sort(function (a, b) { return (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) - (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) })
+      else sortedAccounts.sort(function (a, b) { return (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) - (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
   }
