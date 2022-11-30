@@ -46,8 +46,10 @@ function randomizeRank() {
 async function getPlayer(playerName) {
     let player = {}
     player.lastUpdated = Date.now()
+    player.addedDate = Date.now()
     player.name = playerName
     player.custom = false
+    player.fetching = false
 
     /////////////////
     // SEARCH FOR PLAYER HERE
@@ -65,7 +67,7 @@ async function getPlayer(playerName) {
     }
 }
 
-function updateTime() {
+async function updateTime() {
     return Date.now()
 }
 
