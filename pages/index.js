@@ -20,6 +20,7 @@ export default function Home() {
 
   const [showAccounts, setShowAccounts] = useState([])
   const [playerSearch, setPlayerSearch] = useState('')
+  const [allowDelete, setAllowDelete] = useState(false);
   const TANK = "tank"
   const DAMAGE = "damage"
   const SUPPORT = "support"
@@ -207,6 +208,10 @@ export default function Home() {
     saveToLocal([])
   }
 
+  const toggleDelete = () => {
+    setAllowDelete(!allowDelete)
+  }
+
   useEffect(() => {
     console.log("Page loaded.");
     loadAccounts()
@@ -279,11 +284,38 @@ export default function Home() {
               Refresh All <FontAwesomeIcon icon={faRefresh}/>
             </button >
           </Tooltip>
-          <Tooltip content={"Deletes all accounts"}>
+
+          {allowDelete == true && ( 
+            <Tooltip content={"Deletes all accounts"}>
             <button className="sort-button deleteAll-button" onClick={(e) => deleteAll()}>
               Delete All <FontAwesomeIcon icon={faClose} />
             </button >
           </Tooltip>
+          )}
+
+          {allowDelete == false && ( 
+            <Tooltip content={"Deletes all accounts"}>
+            <button className="sort-button deleteAll-button" disabled onClick={(e) => deleteAll()}>
+              Delete All <FontAwesomeIcon icon={faClose} />
+            </button >
+          </Tooltip>
+          )}
+
+          {allowDelete == true && (
+            <Tooltip content={"Lock deletion"}>
+              <button className="sort-button deleteAll-button" onClick={(e) => toggleDelete()}>
+                <FontAwesomeIcon icon={faLockOpen} />
+              </button >
+            </Tooltip>
+          )}
+
+          {allowDelete == false && (
+            <Tooltip content={"Unlock deletion"}>
+              <button className="sort-button deleteAll-button" onClick={(e) => toggleDelete()}>
+                <FontAwesomeIcon icon={faLock} />
+              </button >
+            </Tooltip>
+          )}
 
         </div>
 
