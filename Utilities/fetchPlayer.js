@@ -46,8 +46,10 @@ function randomizeRank() {
 async function getPlayer(playerName) {
     let player = {}
     player.lastUpdated = Date.now()
+    player.addedDate = Date.now()
     player.name = playerName
     player.custom = false
+    player.fetching = false
 
     /////////////////
     // SEARCH FOR PLAYER HERE
@@ -57,6 +59,7 @@ async function getPlayer(playerName) {
 
         player.custom = true
         player.tankSR = randomizeRank() || "Not Available"
+        player.tankIcon = 
         player.damageSR = randomizeRank() || "Not Available"
         player.supportSR = randomizeRank() || "Not Available"
         player.profileIcon = "https://i.pinimg.com/originals/89/78/c2/8978c239d819de41f0d73bbcbafb9a6f.png"
@@ -65,7 +68,7 @@ async function getPlayer(playerName) {
     }
 }
 
-function updateTime() {
+async function updateTime() {
     return Date.now()
 }
 

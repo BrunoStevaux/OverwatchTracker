@@ -2,12 +2,15 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { Component, useState, useEffect } from 'react'
+import { Tooltip, Button, Loading } from '@nextui-org/react';
 import { getPlayer, increaseRank, decreaseRank, updateTime, getRank} from '../Utilities/fetchPlayer'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faRefresh, faClose, faChevronUp, faChevronDown, faMagnifyingGlass, faSort} from '@fortawesome/free-solid-svg-icons'
+import { faRefresh, faClose, faChevronUp, faChevronDown, faMagnifyingGlass, faSort, faClock, faLock, faLockOpen} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment"
 
+let azSortAsc = true
+let dateSortAsc = true
 let tankSortAsc = true
 let damageSortAsc = true
 let supportSortAsc = true
@@ -17,6 +20,7 @@ export default function Home() {
 
   const [showAccounts, setShowAccounts] = useState([])
   const [playerSearch, setPlayerSearch] = useState('')
+  const [allowDelete, setAllowDelete] = useState(false);
   const TANK = "tank"
   const DAMAGE = "damage"
   const SUPPORT = "support"
@@ -88,12 +92,12 @@ export default function Home() {
     console.log("Saved to localstorage")
   }
 
-  function updateAccount(id) {
+  async function updateAccount(id) {
     console.log(`Updating account [${showAccounts[id].name}]`)
 
     // Fetch the account from our list
     let buffer = showAccounts.filter(account => account.name == showAccounts[id].name)[0]
-    buffer.lastUpdated = updateTime() // Update the info
+    buffer.lastUpdated = await updateTime() // Update the info
 
     setShowAccounts[id] = buffer // Put updated account back in list
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
@@ -129,6 +133,27 @@ export default function Home() {
     updateAccount(id)
   }
 
+  const sortAZ = () => {
+    azSortAsc = !azSortAsc
+    let sortedAccounts = showAccounts
+    if (azSortAsc) sortedAccounts.sort(function (a, b) { return ('' + b.name).localeCompare(a.name) })
+    else sortedAccounts.sort(function (a, b) { return ('' + a.name).localeCompare(b.name) })
+    setShowAccounts(sortedAccounts)
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
+  }
+
+  const sortDateAdded = () => {
+    dateSortAsc = !dateSortAsc
+    let sortedAccounts = showAccounts
+    if (dateSortAsc) sortedAccounts.sort(function (a, b) { return b.addedDate - a.addedDate })
+    else sortedAccounts.sort(function (a, b) { return a.addedDate - b.addedDate })
+    setShowAccounts(sortedAccounts)
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
+
+    }
+  
   const sortTank = () => {
     tankSortAsc = !tankSortAsc
     let sortedAccounts = showAccounts
@@ -136,6 +161,7 @@ export default function Home() {
     else sortedAccounts.sort(function (a, b) { return getRank(a.tankSR) - getRank(b.tankSR) })
     setShowAccounts(sortedAccounts)
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
 
   }
 
@@ -146,6 +172,7 @@ export default function Home() {
       else sortedAccounts.sort(function (a, b) { return getRank(a.damageSR) - getRank(b.damageSR) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+      saveToLocal(sortedAccounts)
     }
   
   const sortSupport = () => {
@@ -154,7 +181,9 @@ export default function Home() {
       if (supportSortAsc) sortedAccounts.sort(function (a, b) { return getRank(b.supportSR) - getRank(a.supportSR) })
       else sortedAccounts.sort(function (a, b) { return getRank(a.supportSR) - getRank(b.supportSR) })
       setShowAccounts(sortedAccounts)
-      setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
+    
     }
 
   const sortFlex = () => {
@@ -163,17 +192,24 @@ export default function Home() {
       if (flexSortAsc) sortedAccounts.sort(function (a, b) { return (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) - (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) })
       else sortedAccounts.sort(function (a, b) { return (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) - (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) })
       setShowAccounts(sortedAccounts)
-      setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
+    
   }
 
   const refreshAll = () => {
     for (let i = 0; i < showAccounts.length; i++) { updateAccount(i); console.log(`updating ${showAccounts[i].name}`);}
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
   }
 
   const deleteAll = () => {
     setShowAccounts([])
     saveToLocal([])
+  }
+
+  const toggleDelete = () => {
+    setAllowDelete(!allowDelete)
   }
 
   useEffect(() => {
@@ -183,6 +219,12 @@ export default function Home() {
 
   return (
     <div>
+      <Head>
+        <title>
+          OW2 Tracker
+        </title>
+      </Head>
+
       <div className={styles.container}>
         <div className="ow-header">
           <img src="https://blz-contentstack-images.akamaized.net/v3/assets/blt9c12f249ac15c7ec/bltbcf2689c29fa39eb/622906a991f4232f0085d3cc/Masthead_Overwatch2_Logo.png?auto=webp" height="30"/>
@@ -206,27 +248,77 @@ export default function Home() {
           </button>
         </div>
 
-        <div style={{display: "flex", justifyContent: "center", margin: "20px", flexWrap: "wrap"}}>
-          <button className="sort-button" onClick={(e) => sortTank()}>
-            Tank <FontAwesomeIcon icon={faSort} />
-          </button >
-          <button className="sort-button" onClick={(e) => sortDamage()}>
-            Damage <FontAwesomeIcon icon={faSort} />
-          </button >
-          <button className="sort-button" onClick={(e) => sortSupport()}>
-            Support <FontAwesomeIcon icon={faSort} />
-          </button >
-          <button className="sort-button" onClick={(e) => sortFlex()}>
-            Flex <FontAwesomeIcon icon={faSort} />
-          </button >
-          <button className="sort-button" onClick={(e) => refreshAll()}>
-            Refresh All <FontAwesomeIcon icon={faRefresh}/>
-          </button >
-          <button className="sort-button deleteAll-button" onClick={(e) => deleteAll()}>
-            Delete All <FontAwesomeIcon icon={faClose} />
-          </button >
+        <div style={{ display: "flex", justifyContent: "center", margin: "20px", flexWrap: "wrap" }}>
+          <Tooltip content={"Sort alphabetically"}>
+            <button className="sort-button" onClick={(e) => sortAZ()}>
+              A-Z <FontAwesomeIcon icon={faSort} />
+            </button >
+          </Tooltip>
+          <Tooltip content={"Sort by date added"}>
+            <button className="sort-button" onClick={(e) => sortDateAdded()}>
+              <FontAwesomeIcon icon={faClock} /> <FontAwesomeIcon icon={faSort} />
+            </button >
+          </Tooltip>
+          <Tooltip content={"Sort by tank rating"}>
+            <button className="sort-button" onClick={(e) => sortTank()}>
+              Tank <FontAwesomeIcon icon={faSort} />
+            </button >
+          </Tooltip>
+          <Tooltip content={"Sort by damage rating"}>
+            <button className="sort-button" onClick={(e) => sortDamage()}>
+              Damage <FontAwesomeIcon icon={faSort} />
+            </button >
+          </Tooltip>
+          <Tooltip content={"Sort by support rating"}>
+            <button className="sort-button" onClick={(e) => sortSupport()}>
+              Support <FontAwesomeIcon icon={faSort} />
+            </button >
+          </Tooltip>
+          <Tooltip content={"Sort by combined rating"}>
+            <button className="sort-button" onClick={(e) => sortFlex()}>
+              Flex <FontAwesomeIcon icon={faSort} />
+            </button >
+          </Tooltip>
+          <Tooltip content={"Refreshes all accounts"}>
+            <button className="sort-button" onClick={(e) => refreshAll()}>
+              Refresh All <FontAwesomeIcon icon={faRefresh}/>
+            </button >
+          </Tooltip>
+
+          {allowDelete == true && ( 
+            <Tooltip content={"Deletes all accounts"}>
+            <button className="sort-button deleteAll-button" onClick={(e) => deleteAll()}>
+              Delete All <FontAwesomeIcon icon={faClose} />
+            </button >
+          </Tooltip>
+          )}
+
+          {allowDelete == false && ( 
+            <Tooltip content={"Deletes all accounts"}>
+            <button className="sort-button deleteAll-button" disabled onClick={(e) => deleteAll()}>
+              Delete All <FontAwesomeIcon icon={faClose} />
+            </button >
+          </Tooltip>
+          )}
+
+          {allowDelete == true && (
+            <Tooltip content={"Lock deletion"}>
+              <button className="sort-button deleteAll-button" onClick={(e) => toggleDelete()}>
+                <FontAwesomeIcon icon={faLockOpen} />
+              </button >
+            </Tooltip>
+          )}
+
+          {allowDelete == false && (
+            <Tooltip content={"Unlock deletion"}>
+              <button className="sort-button deleteAll-button" onClick={(e) => toggleDelete()}>
+                <FontAwesomeIcon icon={faLock} />
+              </button >
+            </Tooltip>
+          )}
+
         </div>
-        
+
         <div
           style={{ display: "flex", flexWrap: "wrap", justifyContent: "left" }}
         >
@@ -240,15 +332,21 @@ export default function Home() {
                   <img className="player-icon" src={account.profileIcon} width="40"></img>
                   <h5 className="player-name card-header">{account.name}</h5>
                 </div>
-              <div style={{ display: "flex", alignItems: "flex-start"}}> 
-                  <button className="refresh-button" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh}/> </button>
-                  <button className="delete-button" onClick={() => removeAccount(id)}> <FontAwesomeIcon icon={faClose}/> </button>
+                  <div style={{ display: "flex", alignItems: "flex-start" }}> 
+                    <Tooltip content={"Refresh account"}>
+                      <button className="refresh-button" onClick={() => updateAccount(id)}> <FontAwesomeIcon icon={faRefresh} /> </button>
+                  </Tooltip>
+                      
+                  <Tooltip content={"Delete account"}>
+                      <button className="delete-button" onClick={() => removeAccount(id)}> <FontAwesomeIcon icon={faClose} /> </button>
+                  </Tooltip>
                 </div>
               </div>
-
-              <p className="card-text" style={{ color: "darkgrey" }}>Last Updated: {moment(account.lastUpdated).fromNow()}</p>
+              <Tooltip content={moment(account.lastUpdated).format('MMM Do YYYY h:mm:ss a')}>
+                <p className="card-text" style={{ color: "darkgrey" }}>Last Updated: {moment(account.lastUpdated).fromNow()}</p>
+              </Tooltip>
               <div style={{ display: "flex", alignItems: "center"}}>
-                <button className="rank" onClick={() => rankDown(id, TANK)}><FontAwesomeIcon icon={faChevronDown}/></button>
+                <button className="rank" onClick={() => rankDown(id, TANK)}><FontAwesomeIcon icon={faChevronDown} /></button>
                 <button className="rank" onClick={() => rankUp(id, TANK)}><FontAwesomeIcon icon={faChevronUp} /></button>
               
                 <p className="card-text">Tank: {account.tankSR}</p>
