@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faRefresh, faClose, faChevronUp, faChevronDown, faMagnifyingGlass, faSort} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment"
 
+let azSortAsc = true
 let tankSortAsc = true
 let damageSortAsc = true
 let supportSortAsc = true
@@ -129,6 +130,17 @@ export default function Home() {
     updateAccount(id)
   }
 
+  const sortAZ = () => {
+    azSortAsc = !azSortAsc
+    let sortedAccounts = showAccounts
+    // if (azSortAsc) sortedAccounts.sort(function (a, b) { return b.name - a.name })
+    if (azSortAsc) sortedAccounts.sort(function (a, b) { return ('' + a.name).localeCompare(b.name) })
+    else sortedAccounts.sort(function (a, b) { return ('' + b.name).localeCompare(a.name) })
+    setShowAccounts(sortedAccounts)
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+
+  }
+
   const sortTank = () => {
     tankSortAsc = !tankSortAsc
     let sortedAccounts = showAccounts
@@ -183,6 +195,12 @@ export default function Home() {
 
   return (
     <div>
+      <Head>
+        <title>
+          OW2 Tracker
+        </title>
+      </Head>
+
       <div className={styles.container}>
         <div className="ow-header">
           <img src="https://blz-contentstack-images.akamaized.net/v3/assets/blt9c12f249ac15c7ec/bltbcf2689c29fa39eb/622906a991f4232f0085d3cc/Masthead_Overwatch2_Logo.png?auto=webp" height="30"/>
@@ -206,7 +224,10 @@ export default function Home() {
           </button>
         </div>
 
-        <div style={{display: "flex", justifyContent: "center", margin: "20px", flexWrap: "wrap"}}>
+        <div style={{ display: "flex", justifyContent: "center", margin: "20px", flexWrap: "wrap" }}>
+          <button className="sort-button" onClick={(e) => sortAZ()}>
+            A-Z <FontAwesomeIcon icon={faSort} />
+          </button >
           <button className="sort-button" onClick={(e) => sortTank()}>
             Tank <FontAwesomeIcon icon={faSort} />
           </button >
