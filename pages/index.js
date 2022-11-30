@@ -6,7 +6,7 @@ import { Tooltip, Button, Loading } from '@nextui-org/react';
 import { getPlayer, increaseRank, decreaseRank, updateTime, getRank} from '../Utilities/fetchPlayer'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faRefresh, faClose, faChevronUp, faChevronDown, faMagnifyingGlass, faSort, faClock} from '@fortawesome/free-solid-svg-icons'
+import { faRefresh, faClose, faChevronUp, faChevronDown, faMagnifyingGlass, faSort, faClock, faLock, faLockOpen} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment"
 
 let azSortAsc = true
@@ -139,7 +139,7 @@ export default function Home() {
     else sortedAccounts.sort(function (a, b) { return ('' + a.name).localeCompare(b.name) })
     setShowAccounts(sortedAccounts)
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
-
+    saveToLocal(sortedAccounts)
   }
 
   const sortDateAdded = () => {
@@ -149,6 +149,7 @@ export default function Home() {
     else sortedAccounts.sort(function (a, b) { return a.addedDate - b.addedDate })
     setShowAccounts(sortedAccounts)
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
 
     }
   
@@ -159,6 +160,7 @@ export default function Home() {
     else sortedAccounts.sort(function (a, b) { return getRank(a.tankSR) - getRank(b.tankSR) })
     setShowAccounts(sortedAccounts)
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
 
   }
 
@@ -169,6 +171,7 @@ export default function Home() {
       else sortedAccounts.sort(function (a, b) { return getRank(a.damageSR) - getRank(b.damageSR) })
       setShowAccounts(sortedAccounts)
       setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+      saveToLocal(sortedAccounts)
     }
   
   const sortSupport = () => {
@@ -177,7 +180,9 @@ export default function Home() {
       if (supportSortAsc) sortedAccounts.sort(function (a, b) { return getRank(b.supportSR) - getRank(a.supportSR) })
       else sortedAccounts.sort(function (a, b) { return getRank(a.supportSR) - getRank(b.supportSR) })
       setShowAccounts(sortedAccounts)
-      setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
+    
     }
 
   const sortFlex = () => {
@@ -186,12 +191,15 @@ export default function Home() {
       if (flexSortAsc) sortedAccounts.sort(function (a, b) { return (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) - (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) })
       else sortedAccounts.sort(function (a, b) { return (getRank(a.tankSR) + getRank(a.damageSR) + getRank(a.supportSR)) - (getRank(b.tankSR) + getRank(b.damageSR) + getRank(b.supportSR)) })
       setShowAccounts(sortedAccounts)
-      setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
+    
   }
 
   const refreshAll = () => {
     for (let i = 0; i < showAccounts.length; i++) { updateAccount(i); console.log(`updating ${showAccounts[i].name}`);}
     setShowAccounts(currentAccounts => [...currentAccounts]) // Refresh the account list
+    saveToLocal(sortedAccounts)
   }
 
   const deleteAll = () => {
