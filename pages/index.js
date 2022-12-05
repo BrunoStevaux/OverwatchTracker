@@ -97,6 +97,7 @@ export default function Home() {
 
     // Fetch the account from our list
     let buffer = showAccounts.filter(account => account.name == showAccounts[id].name)[0]
+    // IMPLEMENT API HERE !
     buffer.lastUpdated = await updateTime() // Update the info
 
     setShowAccounts[id] = buffer // Put updated account back in list
@@ -287,18 +288,18 @@ export default function Home() {
 
           {allowDelete == true && ( 
             <Tooltip content={"Deletes all accounts"}>
-            <button className="sort-button deleteAll-button" onClick={(e) => deleteAll()}>
-              Delete All <FontAwesomeIcon icon={faClose} />
-            </button >
-          </Tooltip>
+              <button className="sort-button deleteAll-button" onClick={(e) => deleteAll()}>
+                Delete All <FontAwesomeIcon icon={faClose} />
+              </button >
+            </Tooltip>
           )}
 
           {allowDelete == false && ( 
             <Tooltip content={"Deletes all accounts"}>
-            <button className="sort-button deleteAll-button" disabled onClick={(e) => deleteAll()}>
-              Delete All <FontAwesomeIcon icon={faClose} />
-            </button >
-          </Tooltip>
+              <button className="sort-button deleteAll-button" disabled onClick={(e) => deleteAll()}>
+                Delete All <FontAwesomeIcon icon={faClose} />
+              </button >
+            </Tooltip>
           )}
 
           {allowDelete == true && (
