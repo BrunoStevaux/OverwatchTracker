@@ -51,9 +51,17 @@ async function getPlayer(playerName) {
     player.custom = false
     player.fetching = false
 
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
     /////////////////
     // SEARCH FOR PLAYER HERE
     /////////////////
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
     
     if (true) { // if cannot find player 
 

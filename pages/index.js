@@ -98,6 +98,15 @@ export default function Home() {
     // Fetch the account from our list
     let buffer = showAccounts.filter(account => account.name == showAccounts[id].name)[0]
     // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
     buffer.lastUpdated = await updateTime() // Update the info
 
     setShowAccounts[id] = buffer // Put updated account back in list
