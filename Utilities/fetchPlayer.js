@@ -51,15 +51,23 @@ async function getPlayer(playerName) {
     player.custom = false
     player.fetching = false
 
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
     /////////////////
     // SEARCH FOR PLAYER HERE
     /////////////////
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
+    // IMPLEMENT API HERE !
     
     if (true) { // if cannot find player 
 
         player.custom = true
         player.tankSR = randomizeRank() || "Not Available"
-        player.tankIcon = 
+        // player.tankIcon = 
         player.damageSR = randomizeRank() || "Not Available"
         player.supportSR = randomizeRank() || "Not Available"
         player.profileIcon = "https://i.pinimg.com/originals/89/78/c2/8978c239d819de41f0d73bbcbafb9a6f.png"
