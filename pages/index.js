@@ -91,7 +91,7 @@ export default function Home() {
     setPlayerSearch(""); // Reset the search field
   };
 
-  // Adds a player to our list of players
+  // Adds a player to our accounts list
   const addPlayer = async (account) => {
     const newAccount = await getPlayer(account);
     setShowAccounts((currentAccounts) => [...currentAccounts, newAccount]); // Updates the screen with the new account
