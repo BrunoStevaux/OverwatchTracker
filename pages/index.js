@@ -91,7 +91,7 @@ export default function Home() {
     setPlayerSearch(""); // Reset the search field
   };
 
-  // Adds a player to our list of players
+  // Adds a player to our accounts list
   const addPlayer = async (account) => {
     const newAccount = await getPlayer(account);
     setShowAccounts((currentAccounts) => [...currentAccounts, newAccount]); // Updates the screen with the new account
@@ -438,21 +438,37 @@ export default function Home() {
         </div>
 
         <div
-          style={{ display: "flex", flexWrap: "wrap", justifyContent: "left" }}
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "left",
+          }}
         >
           {showAccounts.map((account, id) => (
             <div
               className="card"
-              style={{ width: "310px", margin: "3px", borderRadius: "10px" }}
+              style={{
+                width: "310px",
+                margin: "3px",
+                borderRadius: "10px",
+              }}
               id={id}
               key={id}
             >
               {/* <img class="card-img-top" src={account.profileIcon}></img> */}
               <div className="card-body">
                 <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                    }}
+                  >
                     <img
                       className="player-icon"
                       src={account.profileIcon}
@@ -460,7 +476,12 @@ export default function Home() {
                     ></img>
                     <h5 className="player-name card-header">{account.name}</h5>
                   </div>
-                  <div style={{ display: "flex", alignItems: "flex-start" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                    }}
+                  >
                     <Tooltip content={"Refresh account"}>
                       <button
                         className="refresh-button"
@@ -491,7 +512,12 @@ export default function Home() {
                     Last Updated: {moment(account.lastUpdated).fromNow()}
                   </p>
                 </Tooltip>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
                   {account.custom == true && (
                     <>
                       <button
@@ -508,7 +534,12 @@ export default function Home() {
                   <p className="card-text">Tank: {account.tankSR}</p>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
                   {account.custom == true && (
                     <>
                       <button
@@ -529,7 +560,12 @@ export default function Home() {
                   <p className="card-text">Damage: {account.damageSR}</p>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
                   {account.custom == true && (
                     <>
                       <button
