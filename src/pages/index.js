@@ -326,7 +326,7 @@ export default function Home() {
                         type="search"
                         className="player-search-field"
                         value={playerSearch}
-                        placeholder="PizzaLawyer#11545"
+                        placeholder="FreyaTheCat#1718"
                         onChange={(e) => {
                             setPlayerSearch(e.currentTarget.value);
                         }}
