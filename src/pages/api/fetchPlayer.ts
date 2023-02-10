@@ -31,7 +31,7 @@ async function retrieveData(): Promise<Rankings> {
     return rankings;
   } catch (error) {
     console.error(error);
-    return error;
+    return undefined;
   }
 }
 
