@@ -20,7 +20,7 @@ async function retrieveData(): Promise<any> {
 
 export default async function fetchPlayer(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<Response>
 ) {
   res.status(200).json(await retrieveData());
 }
