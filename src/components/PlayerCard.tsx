@@ -33,6 +33,7 @@ export default function PlayerCard() {
       </Card.Header>
 
       <Card.Image
+        src="https://d15f34w2p8l1cc.cloudfront.net/overwatch/d3e03d1b5b0b85f3cf98847cfd0a396a311a370363c46245e254ce2e3a040527.png"
         width={"100%"}
         objectFit="cover"
       ></Card.Image>
