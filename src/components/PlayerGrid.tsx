@@ -13,18 +13,6 @@ export default function PlayerGrid() {
       <Grid>
         <PlayerCard />
       </Grid>
-      <Grid>
-        <PlayerCard />
-      </Grid>
-      <Grid>
-        <PlayerCard />
-      </Grid>
-      <Grid>
-        <PlayerCard />
-      </Grid>
-      <Grid>
-        <PlayerCard />
-      </Grid>
     </Grid.Container>
   );
 }
