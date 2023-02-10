@@ -22,7 +22,7 @@ export default function PlayerCard() {
         <Button.Group color="gradient" bordered size="xs">
           {/* This is just temporary to test if loading toggle works */}
           <Button>
-            {typeof player.name === "undefined" ? (
+            {typeof player === "undefined" ? (
               <Loading type="points" size="xs" />
             ) : (
               <Text>🔄</Text>
