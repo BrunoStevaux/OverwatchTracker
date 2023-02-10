@@ -17,7 +17,7 @@ async function retrieveData(): Promise<Rankings> {
       ".mouseKeyboard-view.Profile-playerSummary--rankWrapper.is-active"
     ).find(".Profile-playerSummary--roleWrapper");
     const rankings: Rankings = {};
-    rankingNodes.each((i, elem) => {
+    rankingNodes.each((i: any, elem: any) => {
       const role = $(elem)
         .find(".Profile-playerSummary--role img")
         .attr("src")
