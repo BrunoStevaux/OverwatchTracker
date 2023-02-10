@@ -12,27 +12,13 @@ import { useState, useEffect } from "react";
 export default function PlayerCard() {
   const [player, setPlayer] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("http://localhost:3001/");
-        const data = await res.json();
-        setPlayer(data);
-      }
-      catch (err) {
-        console.log("Could not fetch data");
-      }
-    }
-    fetchData();
-  }, []);
-
   let loading = false;
   return (
     <Card isHoverable isPressable css={{ w: "310px" }}>
       <Card.Header css={{ display: "flex", justifyContent: "space-between" }}>
-        <Text h3>{player.name}</Text>
+        <Text h3>Name</Text>
         <Spacer></Spacer>
-        <Text h5>{player.title}</Text>
+        <Text h5>Title</Text>
         <Button.Group color="gradient" bordered size="xs">
           {/* This is just temporary to test if loading toggle works */}
           <Button>
@@ -47,9 +33,7 @@ export default function PlayerCard() {
       </Card.Header>
 
       <Card.Image
-        src={player.profileicon}
         width={"100%"}
-        // height={140}
         objectFit="cover"
       ></Card.Image>
       <Card.Body css={{ p: 0 }}></Card.Body>
