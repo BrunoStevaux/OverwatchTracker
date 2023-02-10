@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+// import type { NextApiRequest, NextApiResponse } from "next";
 const cheerio = require("cheerio");
 const axios = require("axios");
 
@@ -18,9 +18,6 @@ async function retrieveData(): Promise<any> {
   }
 }
 
-export default async function fetchPlayer(
-  req = NextApiRequest,
-  res = NextApiResponse<data>
-) {
+export default async function fetchPlayer(req, res) {
   res.status(200).json(await retrieveData());
 }
