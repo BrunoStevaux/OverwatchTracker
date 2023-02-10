@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 
-export default function PlayerCard() {
+export default function PlayerCard({name}) {
   const [player, setPlayer] = useState({
     playerName: "Loading...",
     playerTitle: "Loading...",
@@ -24,7 +24,7 @@ export default function PlayerCard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await fetch("/api/fetchPlayer?user=FreyaTheCat-1718");
+        const data = await fetch(`/api/fetchPlayer?user=${name}`);
         const dataJSON = await data.json().then();
         setPlayer(dataJSON);
       } catch (error) {
@@ -32,7 +32,7 @@ export default function PlayerCard() {
       }
     }
     fetchData();
-  }, [player]);
+  }, []);
 
   let loading = false;
   return (

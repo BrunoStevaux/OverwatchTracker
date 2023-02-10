@@ -5,13 +5,13 @@ export default function PlayerGrid() {
   return (
     <Grid.Container gap={1}>
       <Grid>
-        <PlayerCard />
+        <PlayerCard name="FreyaTheCat-1718" />
       </Grid>
       <Grid>
-        <PlayerCard />
+        <PlayerCard name="Sidon-11926" />
       </Grid>
       <Grid>
-        <PlayerCard />
+        <PlayerCard name="Exalted-11497" />
       </Grid>
     </Grid.Container>
   );
