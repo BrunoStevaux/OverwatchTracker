@@ -20,7 +20,7 @@ export default function PlayerCard(props) {
         setPlayer(data);
       }
       catch (err) {
-        console.log(err);
+        console.log("Could not fetch data");
       }
     }
     fetchData();
