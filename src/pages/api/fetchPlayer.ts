@@ -5,12 +5,31 @@ const axios = require("axios");
 async function retrieveData(): Promise<any> {
   try {
     const response = await axios.get(
-      "https://overwatch.blizzard.com/en-gb/career/FreyaTheCat-1718/"
+      "https://overwatch.blizzard.com/en-us/career/FreyaTheCat-1718/"
     );
     const html = response.data;
     const $ = cheerio.load(html);
     const imageSource = $(".Profile-player--portrait").attr("src");
-    const jsonResponse = { imageSource };
+    const rankings = {
+      tank: "",
+      offense: "",
+      support: "",
+    };
+    const rankingNodes = $(
+      ".mouseKeyboard-view.Profile-playerSummary--rankWrapper.is-active"
+    ).find(".Profile-playerSummary--roleWrapper");
+    rankingNodes.each((i, elem) => {
+      const role = $(elem)
+        .find(".Profile-playerSummary--role img")
+        .attr("src")
+        .match(/role\/(\w+)/)[1];
+      const rank = $(elem)
+        .find(".Profile-playerSummary--rank")
+        .attr("src")
+        .match(/rank\/(\w+-\d+)/)[1];
+      rankings[role] = rank;
+    });
+    const jsonResponse = { imageSource, rankings };
     return jsonResponse;
   } catch (error) {
     console.error(error);
