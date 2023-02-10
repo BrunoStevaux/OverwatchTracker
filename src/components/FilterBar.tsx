@@ -10,11 +10,7 @@ export default function FilterBar() {
   }
 
   return (
-    <Grid.Container
-      gap={2}
-      justify="left"
-      alignItems="center"
-    >
+    <Grid.Container gap={2} justify="flex-start" alignItems="center">
       <Grid>
         <Switch shadow color="secondary" onChange={toggleFilters} />
       </Grid>
