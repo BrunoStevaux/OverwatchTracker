@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 
-export default function PlayerCard(props) {
+export default function PlayerCard() {
   const [player, setPlayer] = useState([]);
 
   useEffect(() => {

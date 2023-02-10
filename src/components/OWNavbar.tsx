@@ -1,6 +1,6 @@
 import { Navbar, Text, Button, Image, Spacer} from "@nextui-org/react";
 
-export default function OWNavbar(props) {
+export default function OWNavbar() {
   return (
     <Navbar isBordered variant="floating">
       <Navbar.Brand>

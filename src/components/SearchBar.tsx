@@ -1,6 +1,6 @@
 import { Input, css } from "@nextui-org/react";
 
-export default function FilterBar(props) {
+export default function FilterBar() {
   return (
     <>
       <Input

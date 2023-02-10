@@ -2,7 +2,7 @@ import { Button, Switch, Grid } from "@nextui-org/react";
 import { useState } from "react";
 import FilterButton from "@/components/FilterButton";
 
-export default function FilterBar(props) {
+export default function FilterBar() {
   const [showFilters, setshowFilters] = useState(false);
 
   function toggleFilters() {
